@@ -37,4 +37,9 @@ public class AuthController {
                 user.getEmail()
         );
     }
+
+    @PostMapping("/logout")
+    public LogoutResponse logout() {
+        return new LogoutResponse("Logged out successfully");
+    }
 }
