@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -23,4 +24,6 @@ public class ResourceRequest {
 
     @NotNull
     private ResourceType resourceType;
+
+    private List<UUID> tagIds;
 }

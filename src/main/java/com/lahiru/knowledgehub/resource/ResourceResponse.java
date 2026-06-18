@@ -1,5 +1,8 @@
 package com.lahiru.knowledgehub.resource;
 
+import com.lahiru.knowledgehub.tag.TagResponse;
+
+import java.util.List;
 import java.util.UUID;
 
 public record ResourceResponse(
@@ -8,6 +11,7 @@ public record ResourceResponse(
         String title,
         String url,
         String notes,
-        ResourceType resourceType
+        ResourceType resourceType,
+        List<TagResponse> tags
 ) {
 }

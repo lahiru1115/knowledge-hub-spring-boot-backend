@@ -1,11 +1,15 @@
 package com.lahiru.knowledgehub.resource;
 
 import com.lahiru.knowledgehub.collection.Collection;
+import com.lahiru.knowledgehub.tag.Tag;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.UUID;
+import java.util.Set;
+
 
 @Entity
 @Table(name = "resources")
@@ -44,4 +48,13 @@ public class Resource {
     public void prePersist() {
         createdAt = LocalDateTime.now();
     }
+
+    @ManyToMany
+    @JoinTable(
+            name = "resource_tags",
+            joinColumns = @JoinColumn(name = "resource_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    @Builder.Default
+    private Set<Tag> tags = new HashSet<>();
 }

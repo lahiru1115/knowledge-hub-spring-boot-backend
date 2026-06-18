@@ -2,12 +2,17 @@ package com.lahiru.knowledgehub.resource;
 
 import com.lahiru.knowledgehub.collection.Collection;
 import com.lahiru.knowledgehub.collection.CollectionRepository;
+import com.lahiru.knowledgehub.tag.Tag;
+import com.lahiru.knowledgehub.tag.TagRepository;
+import com.lahiru.knowledgehub.tag.TagResponse;
 import com.lahiru.knowledgehub.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -15,6 +20,15 @@ public class ResourceService {
 
     private final ResourceRepository resourceRepository;
     private final CollectionRepository collectionRepository;
+    private final TagRepository tagRepository;
+
+    private Set<Tag> getTags(List<UUID> tagIds) {
+        if (tagIds == null || tagIds.isEmpty()) {
+            return new HashSet<>();
+        }
+
+        return new HashSet<>(tagRepository.findAllById(tagIds));
+    }
 
     public ResourceResponse create(ResourceRequest request, User user) {
         Collection collection = collectionRepository
@@ -27,6 +41,7 @@ public class ResourceService {
                 .notes(request.getNotes())
                 .resourceType(request.getResourceType())
                 .collection(collection)
+                .tags(getTags(request.getTagIds()))
                 .build();
 
         return toResponse(resourceRepository.save(resource));
@@ -56,6 +71,7 @@ public class ResourceService {
         resource.setNotes(request.getNotes());
         resource.setResourceType(request.getResourceType());
         resource.setCollection(collection);
+        resource.setTags(getTags(request.getTagIds()));
 
         return toResponse(resourceRepository.save(resource));
     }
@@ -78,7 +94,14 @@ public class ResourceService {
                 resource.getTitle(),
                 resource.getUrl(),
                 resource.getNotes(),
-                resource.getResourceType()
+                resource.getResourceType(),
+                resource.getTags()
+                        .stream()
+                        .map(tag -> new TagResponse(
+                                tag.getId(),
+                                tag.getName()
+                        ))
+                        .toList()
         );
     }
 }
