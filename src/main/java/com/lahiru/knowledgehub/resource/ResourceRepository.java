@@ -11,4 +11,6 @@ public interface ResourceRepository extends JpaRepository<Resource, UUID> {
     List<Resource> findByCollectionUserId(UUID userId);
 
     Optional<Resource> findByIdAndCollectionUserId(UUID id, UUID userId);
+
+    long countByCollectionUserId(UUID userId);
 }
